@@ -1,8 +1,8 @@
 from typing import Dict, List, NamedTuple, Optional
 
 from BaseClasses import MultiWorld, Region, Entrance
-from .Locations import SCPLocation, location_table, cat_location_table, strange_cat_location_table, costume_location_table, get_locations_by_category
-from .options import SuperCatPlanetOptions, scp_options
+from .Locations import SCPLocation, location_table, cat_location_table, strange_cat_location_table, costume_location_table, hidden_costume_location_table, get_locations_by_category
+from .Options import SuperCatPlanetOptions, scp_options
 
 class SCPRegionData(NamedTuple):
 	locations: Optional[List[str]]
@@ -11,11 +11,11 @@ class SCPRegionData(NamedTuple):
 def create_regions(world: MultiWorld, player: int):
 
 	if(world.option_definitions.cat_rando.value):
-		locations.update(cat_location_table)
+		location_table.update(cat_location_table)
 	if(world.option_definitions.strange_cat_rando.value):
-		locations.update(strange_cat_location_table)
+		location_table.update(strange_cat_location_table)
 	if(world.option_definitions.costume_rando.value):
-		locations.update(costume_location_table)
+		location_table.update(hidden_costume_location_table)
 	
 	scpareas = ["Village", "Canyon", "Jungle", "Factory", "Mushrooms", "Lava Caves", "Ice Caves", "Flowers", "Crows", "Warp Room", "Void", "Final"]
 	

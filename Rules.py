@@ -1,5 +1,6 @@
 from BaseClasses import CollectionState, MultiWorld
 from .Regions import connect_regions
+from .Options import SuperCatPlanetOptions, scp_options
 
 def set_rules(multiworld: MultiWorld, player: int):
 
@@ -42,3 +43,6 @@ def set_rules(multiworld: MultiWorld, player: int):
         multiworld.completion_condition[player] = lambda state: state.can_reach("Crows", 'Region', player)
     else:
         multiworld.completion_condition[player] = lambda state: state.can_reach("Star", 'Location', player)
+    
+    if(getattr(multiworld.worlds[player].options, "cat_hunt_enabled")):
+        multiworld.completion_condition[player] = lambda state: state.has("Cat", getattr(multiworld.worlds[player].options, "cat_hunt_target"))

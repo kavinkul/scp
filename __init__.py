@@ -62,8 +62,20 @@ class SuperCatPlanetWorld(World):
                 continue
             if data.category == "Traps":
                 continue
+            
+            # Add items to the pool if their category is enabled by settings
+            if (data.category == "Cats" and self.option_definitions.cat_rando.value):
+                item_pool += [self.create_item(name) for _ in range(0, quantity)]
 
-            item_pool += [self.create_item(name) for _ in range(0, quantity)]
+            if (data.category == "Strange Cats" and self.option_definitions.strange_cat_rando.value):
+                item_pool += [self.create_item(name) for _ in range(0, quantity)]
+
+            if (name == "Pastry Basket" and self.option_definitions.include_final_stage.value):
+                item_pool += [self.create_item(name) for _ in range(0, quantity)]
+
+            # Add items in universal categories to the pool
+            if (data.category == "Switches"):
+                item_pool += [self.create_item(name) for _ in range(0, quantity)]
 
         # Fill any empty locations with filler items.
         while len(item_pool) + number_placed_item < total_locations:

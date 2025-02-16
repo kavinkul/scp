@@ -246,15 +246,20 @@ strange_cat_location_table: Dict[str, SCPLocationData] = {
 }
 
 costume_location_table: Dict[str, SCPLocationData] = {
-	"Hidden Costume [Jungle - Secret Clubhouse Top]":	SCPLocationData("Costume",   255065),
-	"Hidden Costume [Factory - Old Switch]":			SCPLocationData("Costume",   255089),
-	"Hidden Costume [Factory - Complex]":				SCPLocationData("Costume",   255103),
-	"Hidden Costume [Mushrooms - Left of Save]":		SCPLocationData("Costume",   255105),
-	"Hidden Costume [Ice Caves - Behind Waterfall]":	SCPLocationData("Costume",   255135),
-	"Hidden Costume [Flowers - Red Switch]":			SCPLocationData("Costume",   255167),
-	"Hidden Costume [Void - Skull]":					SCPLocationData("Costume",   255196),
+	# "Type [Descriptor - Cost]": SCPLocationData("Costume")
+	# ex: "Wings [Flandre - 160]"
+}
+hidden_costume_location_table: Dict[str, SCPLocationData] = {
+	"Hidden Costume [Jungle - Secret Clubhouse Top]":	SCPLocationData("Hidden Costume",   255065),
+	"Hidden Costume [Factory - Old Switch]":			SCPLocationData("Hidden Costume",   255089),
+	"Hidden Costume [Factory - Complex]":				SCPLocationData("Hidden Costume",   255103),
+	"Hidden Costume [Mushrooms - Left of Save]":		SCPLocationData("Hidden Costume",   255105),
+	"Hidden Costume [Ice Caves - Behind Waterfall]":	SCPLocationData("Hidden Costume",   255135),
+	"Hidden Costume [Flowers - Red Switch]":			SCPLocationData("Hidden Costume",   255167),
+	"Hidden Costume [Void - Skull]":					SCPLocationData("Hidden Costume",   255196),
 }
 
-full_location_table = location_table.update(cat_location_table).update(strange_cat_location_table).update(costume_location_table)
+full_location_table = location_table.update(cat_location_table).update(strange_cat_location_table).update(hidden_costume_location_table)
 # event_location_table: Dict[str, SCPLocationData] = {}
 # Also dont knwo what the fuck this is either mun ^^^
+# i actually know what it does now but i like this comment so i'm leaving it :3

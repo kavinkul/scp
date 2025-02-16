@@ -53,6 +53,7 @@ class CatHuntEnabled(Toggle):
     Enables Cat Hunt.
     Cat Hunt requires you to already have the required number of cats when performing your goal ending.
     If you reach your ending before reaching this number, you will need to reach it again after receiving enough cats.
+    Automatically enables cat randomization.
     """
     display_name = "Cat Hunt"
     default = False
