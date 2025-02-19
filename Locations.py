@@ -80,6 +80,7 @@ cat_location_table: Dict[str, SCPLocationData] = {
 	"Cat [Canyon - Danger 1]":					SCPLocationData("Cat",   255044),
 	"Cat [Canyon - Danger 2]":					SCPLocationData("Cat",   255045),
 	"Cat [Canyon - Danger 3]":					SCPLocationData("Cat",   255046),
+	"Cat [Canyon - Past Danger]":				SCPLocationData("Cat",   255203),
 	"Cat [Canyon - Orange Switch 1]":			SCPLocationData("Cat",   255047),
 	"Cat [Canyon - Orange Switch 2]":			SCPLocationData("Cat",   255048),
 
@@ -88,6 +89,7 @@ cat_location_table: Dict[str, SCPLocationData] = {
 	"Cat [Jungle - Crossroads 2]":				SCPLocationData("Cat",   255051),
 	"Cat [Jungle - Left of Crossroads]":		SCPLocationData("Cat",   255052),
 	"Cat [Jungle - Confusing]":					SCPLocationData("Cat",   255053),
+	"Cat [Jungle - Thorn Tunnel]":				SCPLocationData("Cat",   255202),
 	"Cat [Jungle - Canfuzling]":				SCPLocationData("Cat",   255055),
 	"Cat [Jungle - Hidey Hole]":				SCPLocationData("Cat",   255056),
 	"Cat [Jungle - Outside Factory]":			SCPLocationData("Cat",   255057),
@@ -245,10 +247,61 @@ strange_cat_location_table: Dict[str, SCPLocationData] = {
 	"Strange Cat [Final - Not Much Longer Now]":	SCPLocationData("Strange Cat",   255200),
 }
 
+"""
 costume_location_table: Dict[str, SCPLocationData] = {
-	# "Type [Descriptor - Cost]": SCPLocationData("Costume")
-	# ex: "Wings [Flandre - 160]"
+	"Dye [White - 0]": 			SCPLocationData("Costume", 255300),
+	"Dye [Pink - 1]": 			SCPLocationData("Costume", 255300),
+	"Dye [Salmon - 5]": 		SCPLocationData("Costume", 255300),
+	"Dye [Indigo - 7]": 		SCPLocationData("Costume", 255300),
+	"Dye [Chartreuse - 10]": 	SCPLocationData("Costume", 255300),
+	"Dye [White - 15]": 		SCPLocationData("Costume", 255300),
+	"Dye [White - 18]": 		SCPLocationData("Costume", 255300),
+	"Dye [White - 21]": 		SCPLocationData("Costume", 255300),
+	"Dye [White - 24]": 		SCPLocationData("Costume", 255300),
+	"Dye [Black - ???]": 		SCPLocationData("Costume", 255300),
+	"Dye [White - HAT]": 		SCPLocationData("Costume", 255300),
+	"Dye [White - ALL]": 		SCPLocationData("Costume", 255300),
+	"Dye [White - ALL]": 		SCPLocationData("Costume", 255300),
+	"Dye [White - ALL]": 		SCPLocationData("Costume", 255300),
+
+	"Dress [Plain - 0]": 			SCPLocationData("Costume", 255300),
+	"Dress [Star - 10]": 			SCPLocationData("Costume", 255300),
+	"Dress [Stripe - 15]": 			SCPLocationData("Costume", 255300),
+	"Dress [Dots - 20]": 			SCPLocationData("Costume", 255300),
+	"Dress [Trimmed Stripe - 25]": 	SCPLocationData("Costume", 255300),
+	"Dress [Stripes - 30]":			SCPLocationData("Costume", 255300),
+	"Dress [Vertical Stripe - 40]":	SCPLocationData("Costume", 255300),
+	"Dress [Heart - 50]": 			SCPLocationData("Costume", 255300),
+	"Dress [Trim - 60]": 			SCPLocationData("Costume", 255300),
+	"Dress [Hem - 70]": 			SCPLocationData("Costume", 255300),
+	"Dress [Black Trim - 80]":		SCPLocationData("Costume", 255300),
+
+	"Hat [None - 0]": 				SCPLocationData("Costume", 255300),
+	"Hat [Ears - 15]": 				SCPLocationData("Costume", 255300),
+	"Hat [Big Ears - 30]": 			SCPLocationData("Costume", 255300),
+	"Hat [Halo - 45]": 				SCPLocationData("Costume", 255300),
+	"Hat [Sleepy Hat - 60]": 		SCPLocationData("Costume", 255300),
+	"Hat [Scarf - 70]": 			SCPLocationData("Costume", 255300),
+	"Hat [Headband - 75]": 			SCPLocationData("Costume", 255300),
+	"Hat [Necklace - 90]": 			SCPLocationData("Costume", 255300),
+	"Hat [Bow - 105]": 				SCPLocationData("Costume", 255300),
+	"Hat [Shades - 120]": 			SCPLocationData("Costume", 255300),
+	"Hat [Squid - 135]":	 		SCPLocationData("Costume", 255300),
+	"Hat [Scarlet - 150]": 			SCPLocationData("Costume", 255300),
+
+	"Wings [Angel - 0]": 			SCPLocationData("Costume", 255300),
+	"Wings [Fly - 0]":	 			SCPLocationData("Costume", 255300),
+	"Wings [Bat - 0]": 				SCPLocationData("Costume", 255300),
+	"Wings [Moth - 0]": 			SCPLocationData("Costume", 255300),
+	"Wings [Fairy - 0]":	 		SCPLocationData("Costume", 255300),
+	"Wings [Gear - 0]":		 		SCPLocationData("Costume", 255300),
+	"Wings [Propellor - 0]": 		SCPLocationData("Costume", 255300),
+	"Wings [Jet - 0]": 				SCPLocationData("Costume", 255300),
+	"Wings [Cirno - 0]": 			SCPLocationData("Costume", 255300),
+	"Wings [Scarlet - 0]": 			SCPLocationData("Costume", 255300),
 }
+"""
+
 hidden_costume_location_table: Dict[str, SCPLocationData] = {
 	"Hidden Costume [Jungle - Secret Clubhouse Top]":	SCPLocationData("Hidden Costume",   255065),
 	"Hidden Costume [Factory - Old Switch]":			SCPLocationData("Hidden Costume",   255089),
@@ -259,7 +312,14 @@ hidden_costume_location_table: Dict[str, SCPLocationData] = {
 	"Hidden Costume [Void - Skull]":					SCPLocationData("Hidden Costume",   255196),
 }
 
-full_location_table = location_table.update(cat_location_table).update(strange_cat_location_table).update(hidden_costume_location_table)
+full_location_table: Dict[str, SCPLocationData] = {}
+
+full_location_table.update(location_table)
+
+full_location_table.update(cat_location_table)
+full_location_table.update(strange_cat_location_table)
+full_location_table.update(hidden_costume_location_table)
+
 # event_location_table: Dict[str, SCPLocationData] = {}
 # Also dont knwo what the fuck this is either mun ^^^
 # i actually know what it does now but i like this comment so i'm leaving it :3

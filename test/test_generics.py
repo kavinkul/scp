@@ -5,12 +5,13 @@ class TestGenerics(SuperCatPlanetTestBase):
         "cat_rando": True,
         "local_cats": False,
         "strange_cat_rando": True,
-        "costume_rando": True,
+        "extra_walls": True,
+        "hidden_costume_rando": False,
         "ending_required": 0,
-        "include_final_stage": True,
+        "include_final_stage": False,
         "cat_hunt_enabled": False,
-        "cat_hunt_target": 168,
-        "death_link": True,
+        "cat_hunt_target": 150,
+        "death_link": False,
     }
 
     def test_generics_all(self) -> None:

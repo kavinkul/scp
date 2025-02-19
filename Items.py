@@ -22,10 +22,6 @@ def get_items_by_category(category: str) -> Dict[str, SCPItemData]:
 
 item_table: Dict[str, SCPItemData] = {
 
-	# Cats
-	"Cat":				SCPItemData("Cats", 254000,ItemClassification.progression_skip_balancing,170),
-	"Strange Cat":		SCPItemData("Cats", 254001,ItemClassification.progression_skip_balancing,17),
-
 	# Switches
 	"Red Switch":			SCPItemData("Switches", 254010,ItemClassification.progression),
 	"Orange Switch":		SCPItemData("Switches", 254011,ItemClassification.progression),
@@ -33,8 +29,12 @@ item_table: Dict[str, SCPItemData] = {
 	"Right Yellow Switch":	SCPItemData("Switches", 254013,ItemClassification.progression),
 	"Green Switch":			SCPItemData("Switches", 254014,ItemClassification.filler),
 	"Blue Switch":			SCPItemData("Switches", 254015,ItemClassification.progression),
-	"Purple Switch":		SCPItemData("Switches", 254016,ItemClassification.useful),
+	"Purple Switch":		SCPItemData("Switches", 254016,ItemClassification.progression),
 	"White Switch":			SCPItemData("Switches", 254017,ItemClassification.progression),
+
+	# Cats
+	"Cat":				SCPItemData("Cats", 254000,ItemClassification.progression_skip_balancing,170),
+	"Strange Cat":		SCPItemData("Strange Cats", 254001,ItemClassification.progression_skip_balancing,17),
 
 	# Misc
 	"Pastry Basket": 	SCPItemData("Miscellaneous", 254020,ItemClassification.progression),
@@ -45,9 +45,9 @@ item_table: Dict[str, SCPItemData] = {
 
 	# Traps
 
-	"Plonker": SCPItemData("Traps", 254040,ItemClassification.trap),
+	"Ogmo Trap": SCPItemData("Traps", 254040,ItemClassification.trap),
 	#"Death": SCPItemData("Traps", 254041,ItemClassification.trap),
-	"Crow": SCPItemData("Traps", 254042,ItemClassification.trap),
+	"Crow Trap": SCPItemData("Traps", 254042,ItemClassification.trap),
 
 }
 

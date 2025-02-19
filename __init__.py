@@ -5,9 +5,9 @@ from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
 from .Items import SCPItem, SCPItemData, get_items_by_category, item_table
 from .Locations import SCPLocation, location_table, full_location_table
-from .Options import scp_options
+from .Options import scp_options, SuperCatPlanetOptions
 from .Regions import create_regions
-from .Rules import set_rules
+from .Rules import set_rules, create_extra_walls, goal_rule, wall_rule
 import random
 
 
@@ -34,19 +34,28 @@ class SuperCatPlanetWorld(World):
     game = "Super Cat Planet"
     web = SuperCatPlanetWebWorld()
     option_definitions = scp_options
+    option_dataclass = SuperCatPlanetOptions
+    options: SuperCatPlanetOptions
+    extra_walls_table: Dict[str, str]
     topology_present = True
     # web = RLWeb()
 
-    
-
     item_name_to_id = {name: data.address for name, data in item_table.items()}
     location_name_to_id = {name: data.address for name, data in full_location_table.items()}
+
+    def generate_early(self):
+        self.extra_walls_table = create_extra_walls(self.multiworld, self.player)
+
+    def make_walls(self):
+        return create_extra_walls(self.multiworld, self.player)
 
     def get_setting(self, name: str):
         return getattr(self.multiworld, name)[self.player]
 
     def fill_slot_data(self) -> dict:
-        return {option_name: self.get_setting(option_name).value for option_name in scp_options}
+        slot_data_dict = {option_name: self.get_setting(option_name).value for option_name in scp_options}
+        slot_data_dict["extra_walls_table"] = self.extra_walls_table
+        return slot_data_dict
 
     def create_items(self):
         item_pool: List[SCPItem] = []
@@ -64,13 +73,17 @@ class SuperCatPlanetWorld(World):
                 continue
             
             # Add items to the pool if their category is enabled by settings
-            if (data.category == "Cats" and self.option_definitions.cat_rando.value):
+            if (data.category == "Cats" and self.options.cat_rando.value):
+                if(not self.options.include_final_stage.value):
+                    quantity -= 1
                 item_pool += [self.create_item(name) for _ in range(0, quantity)]
 
-            if (data.category == "Strange Cats" and self.option_definitions.strange_cat_rando.value):
+            if (data.category == "Strange Cats" and self.options.strange_cat_rando.value):
+                if(not self.options.include_final_stage.value):
+                    quantity -= 1
                 item_pool += [self.create_item(name) for _ in range(0, quantity)]
 
-            if (name == "Pastry Basket" and self.option_definitions.include_final_stage.value):
+            if (name == "Pastry Basket" and self.options.include_final_stage.value):
                 item_pool += [self.create_item(name) for _ in range(0, quantity)]
 
             # Add items in universal categories to the pool
@@ -92,8 +105,11 @@ class SuperCatPlanetWorld(World):
         data = item_table[name]
         return SCPItem(name, data.classification, data.address, self.player)
 
+    def create_extra_walls(self):
+        return create_extra_walls(self.multiworld, self.player)
+
     def set_rules(self):
-        set_rules(self.multiworld, self.player)
+        set_rules(self.multiworld, self.player, self.extra_walls_table)
 
     def create_regions(self):
         create_regions(self.multiworld, self.player)

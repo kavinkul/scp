@@ -8,95 +8,112 @@ class SCPRegionData(NamedTuple):
 	locations: Optional[List[str]]
 	region_exits: Optional[List[str]]
 
-def create_regions(world: MultiWorld, player: int):
+def create_regions(multiworld: MultiWorld, player: int):
 
-	if(world.option_definitions.cat_rando.value):
+	if(getattr(multiworld.worlds[player].options, "cat_rando")):
 		location_table.update(cat_location_table)
-	if(world.option_definitions.strange_cat_rando.value):
+	if(getattr(multiworld.worlds[player].options, "strange_cat_rando")):
 		location_table.update(strange_cat_location_table)
-	if(world.option_definitions.costume_rando.value):
+	if(getattr(multiworld.worlds[player].options, "hidden_costume_rando")):
 		location_table.update(hidden_costume_location_table)
 	
-	scpareas = ["Village", "Canyon", "Jungle", "Factory", "Mushrooms", "Lava Caves", "Ice Caves", "Flowers", "Crows", "Warp Room", "Void", "Final"]
+	scpareas = ["Village", "Canyon", "Jungle", "Factory", "Mushrooms_outside", "Mushrooms", "Lava Caves", "Ice Caves", "Flowers", "Crows_intro", "Crows", "Warp Room", "Void", "Final"]
 	
-	regMenu = Region("Menu", player, world)
-	world.regions.append(regMenu)
+	regMenu = Region("Menu", player, multiworld)
+	multiworld.regions.append(regMenu)
 
-	regVillage = Region("Village", player, world)
+	regVillage = Region("Village", player, multiworld)
 	villageLocNames = list(filter(lambda x: "Village - " in x, location_table))
-	villageLocNames.append('Cat [Dye Shop]')
+	if(getattr(multiworld.worlds[player].options, "cat_rando")):
+		villageLocNames.append('Cat [Dye Shop]')
 	regVillage.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regVillage) for loc_name in villageLocNames]
-	world.regions.append(regVillage)
+	multiworld.regions.append(regVillage)
 
-	regCanyon = Region("Canyon", player, world)
+	regCanyon = Region("Canyon", player, multiworld)
 	canyonLocNames = list(filter(lambda x: "Canyon - " in x, location_table))
-	canyonLocNames.extend(['Cat [Dress Shop]', 'Orange Switch'])
+	if(getattr(multiworld.worlds[player].options, "cat_rando")):
+		canyonLocNames.append('Cat [Dress Shop]')
+	canyonLocNames.append('Orange Switch')
 	regCanyon.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regCanyon) for loc_name in canyonLocNames]
-	world.regions.append(regCanyon)
+	multiworld.regions.append(regCanyon)
 
-	regJungle = Region("Jungle", player, world)
+	regJungle = Region("Jungle", player, multiworld)
 	jungleLocNames = list(filter(lambda x: "Jungle - " in x, location_table))
 	jungleLocNames.append('Green Switch')
 	regJungle.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regJungle) for loc_name in jungleLocNames]
-	world.regions.append(regJungle)
+	multiworld.regions.append(regJungle)
 
-	regFactory = Region("Factory", player, world)
+	regFactory = Region("Factory", player, multiworld)
 	factoryLocNames = list(filter(lambda x: "Factory - " in x, location_table))
 	factoryLocNames.append('Blue Switch')
 	regFactory.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regFactory) for loc_name in factoryLocNames]
-	world.regions.append(regFactory)
+	multiworld.regions.append(regFactory)
 
-	regMushrooms = Region("Mushrooms", player, world)
-	mushroomsLocNames = [	
-		"Cat [Wings Shop]",
-		"Hidden Costume [Mushrooms - Left of Save]",
-		"Purple Switch"
-						]
+	regOutsideMush = Region("Mushrooms_outside", player, multiworld)
+	outmushLocNames = []
+	if(getattr(multiworld.worlds[player].options, "cat_rando")):
+		outmushLocNames.append("Cat [Lava Caves - Entrance from Factory]")
+	regOutsideMush.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regOutsideMush) for loc_name in outmushLocNames]
+	multiworld.regions.append(regOutsideMush)
+
+	regMushrooms = Region("Mushrooms", player, multiworld)
+	mushroomsLocNames = [ "Purple Switch" ]
+	if(getattr(multiworld.worlds[player].options, "cat_rando")):
+		mushroomsLocNames.append('Cat [Wings Shop]')
+	if(getattr(multiworld.worlds[player].options, "hidden_costume_rando")):
+		mushroomsLocNames.append('Hidden Costume [Mushrooms - Left of Save]')
 	regMushrooms.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regMushrooms) for loc_name in mushroomsLocNames]
-	world.regions.append(regMushrooms)
+	multiworld.regions.append(regMushrooms)
 
-	regLava = Region("Lava Caves", player, world)
+	regLava = Region("Lava Caves", player, multiworld)
 	lavaLocNames = list(filter(lambda x: "Lava Caves - " in x, location_table))
 	lavaLocNames.extend(['Right Yellow Switch', 'Left Yellow Switch'])
+	lavaLocNames.remove("Cat [Lava Caves - Entrance from Factory]")
 	regLava.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regLava) for loc_name in lavaLocNames]
-	world.regions.append(regLava)
+	multiworld.regions.append(regLava)
 
-	regIce = Region("Ice Caves", player, world)
+	regIce = Region("Ice Caves", player, multiworld)
 	iceLocNames = list(filter(lambda x: "Ice Caves - " in x, location_table))
 	iceLocNames.append('White Switch')
 	regIce.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regIce) for loc_name in iceLocNames]
-	world.regions.append(regIce)
+	multiworld.regions.append(regIce)
 
-	regFlowers = Region("Flowers", player, world)
+	regFlowers = Region("Flowers", player, multiworld)
 	flowersLocNames = list(filter(lambda x: "Flowers - " in x, location_table))
-	flowersLocNames.extend(['Cat [Hat Shop]', 'Red Switch'])
+	if(getattr(multiworld.worlds[player].options, "cat_rando")):
+		flowersLocNames.append('Cat [Hat Shop]')
+	flowersLocNames.append('Red Switch')
 	regFlowers.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regFlowers) for loc_name in flowersLocNames]
-	world.regions.append(regFlowers)
+	multiworld.regions.append(regFlowers)
 
-	regCrows = Region("Crows", player, world)
+	regCrowsIntro = Region("Crows_intro", player, multiworld)
+	multiworld.regions.append(regCrowsIntro)
+
+	regCrows = Region("Crows", player, multiworld)
 	crowsLocNames = list(filter(lambda x: "Crows - " in x, location_table))
 	regCrows.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regCrows) for loc_name in crowsLocNames]
-	world.regions.append(regCrows)
+	multiworld.regions.append(regCrows)
 
-	regWarpRoom = Region("Warp Room", player, world)
-	warproomLocNames = ["Strange Cat [Warp Room - Not Over Yet]"]
+	regWarpRoom = Region("Warp Room", player, multiworld)
+	if(getattr(multiworld.worlds[player].options, "strange_cat_rando")):
+		warproomLocNames = ["Strange Cat [Warp Room - Not Over Yet]"]
 	regWarpRoom.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regWarpRoom) for loc_name in warproomLocNames]
-	world.regions.append(regWarpRoom)
+	multiworld.regions.append(regWarpRoom)
 
-	regVoid = Region("Void", player, world)
+	regVoid = Region("Void", player, multiworld)
 	voidLocNames = list(filter(lambda x: "Void - " in x, location_table))
 	regVoid.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regVoid) for loc_name in voidLocNames]
-	world.regions.append(regVoid)
+	multiworld.regions.append(regVoid)
 
-	regFinal = Region("Final", player, world)
+	regFinal = Region("Final", player, multiworld)
 	finalLocNames = list(filter(lambda x: "Final - " in x, location_table))
 	finalLocNames.extend(['Pastry Basket', 'Star'])
-	if(world.option_definitions.include_final_stage):
+	if(getattr(multiworld.worlds[player].options, "include_final_stage")):
 		regFinal.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regFinal) for loc_name in finalLocNames]
-	world.regions.append(regFinal)
+	multiworld.regions.append(regFinal)
 
-def create_region(world: MultiWorld, player: int, name: str, data: SCPRegionData):
-	region = Region(name, player, world)
+def create_region(multiworld: MultiWorld, player: int, name: str, data: SCPRegionData):
+	region = Region(name, player, multiworld)
 	if data.locations:
 		for loc_name in data.locations:
 			loc_data = location_table.get(loc_name)
@@ -105,7 +122,9 @@ def create_region(world: MultiWorld, player: int, name: str, data: SCPRegionData
 
 	return region
 
-def connect_regions(world: MultiWorld, player: int, source: str, target: str, rule=None):
-    sourceRegion = world.get_region(source, player)
-    targetRegion = world.get_region(target, player)
-    sourceRegion.connect(targetRegion, rule=rule)
+def connect_regions(multiworld: MultiWorld, player: int, source: str, target: str, rule=None, twoway=False):
+	sourceRegion = multiworld.get_region(source, player)
+	targetRegion = multiworld.get_region(target, player)
+	sourceRegion.connect(targetRegion, rule=rule)
+	if twoway:
+		targetRegion.connect(sourceRegion, rule=rule)

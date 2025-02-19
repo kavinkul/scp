@@ -20,7 +20,7 @@ class LocalCats(Range):
     """
     display_name = "Local Cat Percentage"
     range_start = 0
-    range_start = 100
+    range_end = 100
     default = 80
 
 class StrangeCatsRandomized(Toggle):
@@ -28,7 +28,12 @@ class StrangeCatsRandomized(Toggle):
     display_name = "Randomize Strange Cats"
     default = True
 
-class CostumesRandomized(Toggle):
+class ExtraWalls(Toggle):
+    """Adds button walls between areas to break up progression. Highly recommended."""
+    display_name = "Extra Button Walls"
+    default = True
+
+class HiddenCostumesRandomized(Toggle):
     """Includes Hidden Costume locations as checks."""
     display_name = "Hidden Costumes"
     default = False
@@ -44,6 +49,7 @@ class FinalStage(Toggle):
     """
     Includes checks found in the final stage.
     Automatically enabled if goal is set to True Ending.
+    Automatically enables strange cat randomization.
     """
     display_name = "Include Final Stage"
     default = False
@@ -63,14 +69,15 @@ class CatHuntTarget(Range):
     display_name = "Cat Hunt Target"
     range_start = 1
     range_end = 170
-    default = 169
+    default = 150
 
 scp_options: Dict[str, type(Option)] = {
     # split jump move rando
     "cat_rando": CatsRandomized,
     "local_cats": LocalCats,
     "strange_cat_rando": StrangeCatsRandomized,
-    "costume_rando": CostumesRandomized,
+    "extra_walls": ExtraWalls,
+    "hidden_costume_rando": HiddenCostumesRandomized,
     "ending_required": EndingRequired,
     "include_final_stage": FinalStage,
     "cat_hunt_enabled": CatHuntEnabled,
@@ -83,7 +90,8 @@ class SuperCatPlanetOptions(PerGameCommonOptions):
     cat_rando: CatsRandomized
     local_cats: LocalCats
     strange_cat_rando: StrangeCatsRandomized
-    costume_rando: CostumesRandomized
+    extra_walls: ExtraWalls
+    hidden_costume_rando: HiddenCostumesRandomized
     ending_required: EndingRequired
     include_final_stage: FinalStage
     cat_hunt_enabled: CatHuntEnabled
