@@ -1,7 +1,7 @@
 from typing import Dict
 from dataclasses import dataclass
 
-from Options import Choice, Range, Option, Toggle, DeathLink, DefaultOnToggle, OptionSet, PerGameCommonOptions
+from Options import Visibility, Choice, Range, NamedRange, Option, Toggle, DeathLink, DefaultOnToggle, OptionSet, PerGameCommonOptions, OptionGroup
 
 #class SplitJumps(Toggle):
 #   """Starts the player with only one of the three jump heights."""
@@ -13,15 +13,24 @@ class CatsRandomized(Toggle):
     display_name = "Randomize Cats"
     default = True
 
-class LocalCats(Range):
+class LocalCats(NamedRange):
     """
     Forces some percent of Cat items to be found inside of your slot.
-    Recommended to reduce flooding in the multiworld.
+    Reduces flooding in the multiworld.
     """
+    visibility = Visibility.none
     display_name = "Local Cat Percentage"
     range_start = 0
     range_end = 100
-    default = 80
+    special_range_names = {
+        "off": -1,
+        "weak": 50,
+        "strong": 75,
+        "all": 100
+    }
+
+    default = -1
+    
 
 class StrangeCatsRandomized(Toggle):
     """Includes Strange Cats into randomization."""
@@ -71,6 +80,38 @@ class CatHuntTarget(Range):
     range_end = 170
     default = 150
 
+
+#item weights
+
+class CostumeWeight(Range):
+    """Weight of costume filler in the item pool."""
+    display_name = "Costume Weight"
+    range_start = 1
+    range_end = 100
+    default = 10
+
+class OgmoTrap(Range):
+    """Weight of ogmo traps in the item pool."""
+    display_name = "Ogmo Trap Weight"
+    range_start = 0
+    range_end = 100
+    default = 1
+
+class DarknessTrap(Range):
+    """Weight of darkness traps in the item pool."""
+    display_name = "Darkness Trap Weight"
+    range_start = 0
+    range_end = 100
+    default = 1
+
+class CrowTrap(Range):
+    """Weight of crow traps in the item pool."""
+    display_name = "Crow Trap Weight"
+    range_start = 0
+    range_end = 100
+    default = 1
+
+
 scp_options: Dict[str, type(Option)] = {
     # split jump move rando
     "cat_rando": CatsRandomized,
@@ -83,7 +124,22 @@ scp_options: Dict[str, type(Option)] = {
     "cat_hunt_enabled": CatHuntEnabled,
     "cat_hunt_target": CatHuntTarget,
     "death_link": DeathLink,
+    "costume_weight": CostumeWeight,
+    "ogmo_trap": OgmoTrap,
+    "darkness_trap": DarknessTrap,
+    "crow_trap": CrowTrap,
+    
 }
+
+scp_option_groups = [
+    OptionGroup("Filler Weights", [
+        CostumeWeight,
+        OgmoTrap,
+        DarknessTrap,
+        CrowTrap
+    ]),
+]
+
 @dataclass
 class SuperCatPlanetOptions(PerGameCommonOptions):
     # split jump move rando
@@ -97,3 +153,7 @@ class SuperCatPlanetOptions(PerGameCommonOptions):
     cat_hunt_enabled: CatHuntEnabled
     cat_hunt_target: CatHuntTarget
     death_link: DeathLink
+    costume_weight: CostumeWeight
+    ogmo_trap: OgmoTrap
+    darkness_trap: DarknessTrap
+    crow_trap: CrowTrap

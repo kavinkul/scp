@@ -5,7 +5,7 @@ from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
 from .Items import SCPItem, SCPItemData, get_items_by_category, item_table
 from .Locations import SCPLocation, location_table, full_location_table
-from .Options import scp_options, SuperCatPlanetOptions
+from .Options import scp_options, scp_option_groups, SuperCatPlanetOptions
 from .Regions import create_regions
 from .Rules import set_rules, create_extra_walls, goal_rule, wall_rule
 import random
@@ -27,6 +27,8 @@ class SuperCatPlanetWebWorld(WebWorld):
     tutorials = [setup_en]
     '''
 
+    option_groups = scp_option_groups
+
 class SuperCatPlanetWorld(World):
     """
     Super Cat Planet
@@ -35,8 +37,10 @@ class SuperCatPlanetWorld(World):
     web = SuperCatPlanetWebWorld()
     option_definitions = scp_options
     option_dataclass = SuperCatPlanetOptions
+    
     options: SuperCatPlanetOptions
     extra_walls_table: Dict[str, str]
+    junk_pool: Dict[str, int]
     topology_present = True
     # web = RLWeb()
 
@@ -44,6 +48,14 @@ class SuperCatPlanetWorld(World):
     location_name_to_id = {name: data.address for name, data in full_location_table.items()}
 
     def generate_early(self):
+
+        if(self.options.ending_required.value == 1):
+            self.options.include_final_stage.value = 1
+        if(self.options.cat_hunt_enabled.value == 1):
+            self.options.cat_rando.value = 1
+        if(self.options.include_final_stage.value == 1):
+            self.options.strange_cat_rando.value = 1
+        
         self.extra_walls_table = create_extra_walls(self.multiworld, self.player)
 
     def make_walls(self):
@@ -91,15 +103,15 @@ class SuperCatPlanetWorld(World):
                 item_pool += [self.create_item(name) for _ in range(0, quantity)]
 
         # Fill any empty locations with filler items.
-        while len(item_pool) + number_placed_item < total_locations:
-            item_pool.append(self.create_item(self.get_filler_item_name()))
+        self.junk_pool = self.create_junk_pool()
+
+        filler = self.random.choices(*zip(*self.junk_pool.items()), k=total_locations - len(item_pool))
+        item_pool += [self.create_item(name) for name in filler]
 
         self.multiworld.itempool += item_pool
 
     def get_filler_item_name(self) -> str:
-        fillers = get_items_by_category("Junk") | get_items_by_category("Traps")
-        weights = [data.weight for data in fillers.values()]
-        return self.multiworld.random.choices([filler for filler in fillers.keys()], weights, k=1)[0]
+        return self.multiworld.random.choices([filler for filler in self.junk_pool.keys()], list(self.junk_pool.values), k=1)[0]
 
     def create_item(self, name: str) -> SCPItem:
         data = item_table[name]
@@ -107,6 +119,16 @@ class SuperCatPlanetWorld(World):
 
     def create_extra_walls(self):
         return create_extra_walls(self.multiworld, self.player)
+
+    def create_junk_pool(self) -> Dict[str, int]:
+        junk_pool: Dict[str, int] = {}
+        junk_pool = {
+            "Costume": self.options.costume_weight.value,
+            "Ogmo Trap": self.options.ogmo_trap.value,
+            "Darkness Trap": self.options.darkness_trap.value,
+            "Crow Trap": self.options.crow_trap.value,
+        }
+        return junk_pool
 
     def set_rules(self):
         set_rules(self.multiworld, self.player, self.extra_walls_table)

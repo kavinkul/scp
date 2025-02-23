@@ -41,13 +41,13 @@ item_table: Dict[str, SCPItemData] = {
 
 	# Junk
 
-	"Costume": SCPItemData("Junk", 254030,ItemClassification.filler),
+	"Costume": SCPItemData("Junk", 254030,ItemClassification.filler, weight = 10),
 
 	# Traps
 
-	"Ogmo Trap": SCPItemData("Traps", 254040,ItemClassification.trap),
-	#"Death": SCPItemData("Traps", 254041,ItemClassification.trap),
-	"Crow Trap": SCPItemData("Traps", 254042,ItemClassification.trap),
+	"Ogmo Trap": SCPItemData("Traps", 254040,ItemClassification.trap, weight = 1),
+	"Darkness Trap": SCPItemData("Traps", 254041,ItemClassification.trap, weight = 1),
+	"Crow Trap": SCPItemData("Traps", 254042,ItemClassification.trap, weight = 1),
 
 }
 

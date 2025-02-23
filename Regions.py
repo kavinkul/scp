@@ -24,6 +24,7 @@ def create_regions(multiworld: MultiWorld, player: int):
 
 	regVillage = Region("Village", player, multiworld)
 	villageLocNames = list(filter(lambda x: "Village - " in x, location_table))
+	villageLocNames.extend(list(filter(lambda x: "Dye [" in x, location_table)))
 	if(getattr(multiworld.worlds[player].options, "cat_rando")):
 		villageLocNames.append('Cat [Dye Shop]')
 	regVillage.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regVillage) for loc_name in villageLocNames]
@@ -31,6 +32,7 @@ def create_regions(multiworld: MultiWorld, player: int):
 
 	regCanyon = Region("Canyon", player, multiworld)
 	canyonLocNames = list(filter(lambda x: "Canyon - " in x, location_table))
+	canyonLocNames.extend(list(filter(lambda x: "Dress [" in x, location_table)))
 	if(getattr(multiworld.worlds[player].options, "cat_rando")):
 		canyonLocNames.append('Cat [Dress Shop]')
 	canyonLocNames.append('Orange Switch')
@@ -58,6 +60,7 @@ def create_regions(multiworld: MultiWorld, player: int):
 
 	regMushrooms = Region("Mushrooms", player, multiworld)
 	mushroomsLocNames = [ "Purple Switch" ]
+	mushroomsLocNames.extend(list(filter(lambda x: "Wings [" in x, location_table)))
 	if(getattr(multiworld.worlds[player].options, "cat_rando")):
 		mushroomsLocNames.append('Cat [Wings Shop]')
 	if(getattr(multiworld.worlds[player].options, "hidden_costume_rando")):
@@ -68,7 +71,8 @@ def create_regions(multiworld: MultiWorld, player: int):
 	regLava = Region("Lava Caves", player, multiworld)
 	lavaLocNames = list(filter(lambda x: "Lava Caves - " in x, location_table))
 	lavaLocNames.extend(['Right Yellow Switch', 'Left Yellow Switch'])
-	lavaLocNames.remove("Cat [Lava Caves - Entrance from Factory]")
+	if "Cat [Lava Caves - Entrance from Factory]" in lavaLocNames:
+		lavaLocNames.remove("Cat [Lava Caves - Entrance from Factory]")
 	regLava.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regLava) for loc_name in lavaLocNames]
 	multiworld.regions.append(regLava)
 
@@ -80,6 +84,7 @@ def create_regions(multiworld: MultiWorld, player: int):
 
 	regFlowers = Region("Flowers", player, multiworld)
 	flowersLocNames = list(filter(lambda x: "Flowers - " in x, location_table))
+	flowersLocNames.extend(list(filter(lambda x: "Hat [" in x, location_table)))
 	if(getattr(multiworld.worlds[player].options, "cat_rando")):
 		flowersLocNames.append('Cat [Hat Shop]')
 	flowersLocNames.append('Red Switch')
@@ -97,7 +102,7 @@ def create_regions(multiworld: MultiWorld, player: int):
 	regWarpRoom = Region("Warp Room", player, multiworld)
 	if(getattr(multiworld.worlds[player].options, "strange_cat_rando")):
 		warproomLocNames = ["Strange Cat [Warp Room - Not Over Yet]"]
-	regWarpRoom.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regWarpRoom) for loc_name in warproomLocNames]
+		regWarpRoom.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regWarpRoom) for loc_name in warproomLocNames]
 	multiworld.regions.append(regWarpRoom)
 
 	regVoid = Region("Void", player, multiworld)
@@ -107,7 +112,7 @@ def create_regions(multiworld: MultiWorld, player: int):
 
 	regFinal = Region("Final", player, multiworld)
 	finalLocNames = list(filter(lambda x: "Final - " in x, location_table))
-	finalLocNames.extend(['Pastry Basket', 'Star'])
+	finalLocNames.extend(['Pastry Basket', 'Thing'])
 	if(getattr(multiworld.worlds[player].options, "include_final_stage")):
 		regFinal.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regFinal) for loc_name in finalLocNames]
 	multiworld.regions.append(regFinal)
