@@ -1,62 +1,65 @@
 from typing import Dict
 from BaseClasses import CollectionState, MultiWorld
+from worlds.AutoWorld import World
 from .Regions import connect_regions
 from .Locations import location_table
-from .Options import SuperCatPlanetOptions, scp_options
+from .Options import SuperCatPlanetOptions
 import re
 
 
 
-def set_rules(multiworld: MultiWorld, player: int, extra_walls_table: Dict[str, str]):
+def set_rules(world: World, extra_walls_table: Dict[str, str]):
 
-    costume_rules(multiworld, player, extra_walls_table)
+    player = world.player
+    multiworld = world.multiworld
+
+    costume_rules(world, extra_walls_table)
 
     multiworld.get_location("Green Switch", player).access_rule = lambda state: state.has("Red Switch", player, 1) or state.has("Orange Switch", player, 1) or state.has("Blue Switch", player, 1) or state.has("Yellow Switch", player, 1)
-    if getattr(multiworld.worlds[player].options, "cat_rando"):
-        multiworld.get_location("Cat [Jungle - Above Lava Caves 2]", player).access_rule = lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Jungle_Lava")
-    if getattr(multiworld.worlds[player].options, "include_final_stage"):
+    if world.options.cat_rando:
+        multiworld.get_location("Cat [Jungle - Above Lava Caves 2]", player).access_rule = lambda state: wall_rule(state, world, extra_walls_table, "Jungle_Lava")
+    if world.options.include_final_stage:
         multiworld.get_location("Strange Cat [Final - Not Much Longer Now]", player).access_rule = lambda state: state.has("Pastry Basket", player, 1)
         multiworld.get_location("Thing", player).access_rule = lambda state: state.has("Pastry Basket", player, 1)
 
-    connect_regions(multiworld, player, "Menu", "Village", None)
+    connect_regions(world, "Menu", "Village", None)
     
-    connect_regions(multiworld, player, "Village", "Jungle", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Village_Jungle"), twoway=True)
-    connect_regions(multiworld, player, "Village", "Canyon", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Village_Canyon"), twoway=True)
+    connect_regions(world, "Village", "Jungle", lambda state: wall_rule(state, world, extra_walls_table, "Village_Jungle"), twoway=True)
+    connect_regions(world, "Village", "Canyon", lambda state: wall_rule(state, world, extra_walls_table, "Village_Canyon"), twoway=True)
 
-    connect_regions(multiworld, player, "Canyon", "Void", lambda state: state.has("Orange Switch", player, 1))
-    connect_regions(multiworld, player, "Canyon", "Flowers", lambda state: state.has("Orange Switch", player, 1), twoway=True)
+    connect_regions(world, "Canyon", "Void", lambda state: state.has("Orange Switch", player, 1))
+    connect_regions(world, "Canyon", "Flowers", lambda state: state.has("Orange Switch", player, 1), twoway=True)
 
-    connect_regions(multiworld, player, "Jungle", "Lava Caves", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Jungle_Lava"), twoway=True)
-    connect_regions(multiworld, player, "Jungle", "Flowers", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Jungle_Flowers"), twoway=True)
-    connect_regions(multiworld, player, "Jungle", "Factory", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Jungle_Factory"), twoway=True)
+    connect_regions(world, "Jungle", "Lava Caves", lambda state: wall_rule(state, world, extra_walls_table, "Jungle_Lava"), twoway=True)
+    connect_regions(world, "Jungle", "Flowers", lambda state: wall_rule(state, world, extra_walls_table, "Jungle_Flowers"), twoway=True)
+    connect_regions(world, "Jungle", "Factory", lambda state: wall_rule(state, world, extra_walls_table, "Jungle_Factory"), twoway=True)
 
-    connect_regions(multiworld, player, "Mushrooms_outside", "Mushrooms", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Lava_Mushrooms"), twoway=True)
-    connect_regions(multiworld, player, "Mushrooms", "Final", lambda state: state.count("Strange Cat", player) >= 16)
+    connect_regions(world, "Mushrooms_outside", "Mushrooms", lambda state: wall_rule(state, world, extra_walls_table, "Lava_Mushrooms"), twoway=True)
+    connect_regions(world, "Mushrooms", "Final", lambda state: state.count("Strange Cat", player) >= 16)
 
-    connect_regions(multiworld, player, "Factory", "Mushrooms_outside", None)
-    connect_regions(multiworld, player, "Mushrooms_outside", "Factory", lambda state: state.has("Purple Switch", player, 1) and state.has("Blue Switch", player, 1))
+    connect_regions(world, "Factory", "Mushrooms_outside", lambda state: wall_rule(state, world, extra_walls_table, "Factory_Lava"), twoway=True)
     
-    connect_regions(multiworld, player, "Mushrooms_outside", "Lava Caves", None)
-    connect_regions(multiworld, player, "Lava Caves", "Mushrooms_outside", lambda state: state.has("Purple Switch", player, 1))
-    connect_regions(multiworld, player, "Lava Caves", "Crows_intro", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Lava_Ice"), twoway=True)
+    connect_regions(world, "Mushrooms_outside", "Lava Caves", None)
+    connect_regions(world, "Lava Caves", "Mushrooms_outside", lambda state: state.has("Purple Switch", player, 1))
+    connect_regions(world, "Lava Caves", "Crows_intro", lambda state: wall_rule(state, world, extra_walls_table, "Lava_Ice"), twoway=True)
 
-    connect_regions(multiworld, player, "Ice Caves", "Flowers", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Flowers_Ice"), twoway=True)
-    connect_regions(multiworld, player, "Ice Caves", "Crows_intro", lambda state: wall_rule(state, multiworld, player, extra_walls_table, "Lava_Ice"), twoway=True)
+    connect_regions(world, "Ice Caves", "Flowers", lambda state: wall_rule(state, world, extra_walls_table, "Flowers_Ice"), twoway=True)
+    connect_regions(world, "Ice Caves", "Crows_intro", lambda state: wall_rule(state, world, extra_walls_table, "Lava_Ice"), twoway=True)
 
-    connect_regions(multiworld, player, "Crows_intro", "Crows", lambda state: (((state.has("Left Yellow Switch", player, 1) and \
+    connect_regions(world, "Crows_intro", "Crows", lambda state: (((state.has("Left Yellow Switch", player, 1) and \
         state.has("Right Yellow Switch", player, 1)) or \
         state.has("White Switch", player, 1)) and \
         state.has("Red Switch", player, 1) and \
         state.has("Orange Switch", player, 1) and \
         state.has("Blue Switch", player, 1)), twoway=True)
 
-    connect_regions(multiworld, player, "Crows", "Warp Room", None)
+    connect_regions(world, "Crows", "Warp Room", None)
 
-    connect_regions(multiworld, player, "Void", "Ice Caves", None)
+    connect_regions(world, "Void", "Ice Caves", lambda state: wall_rule(state, world, extra_walls_table, "Flowers_Ice"), twoway=False)
 
 
 
-    multiworld.completion_condition[player] = lambda state: goal_rule(state, player, multiworld)
+    multiworld.completion_condition[player] = lambda state: goal_rule(state, world)
 
     #goal = getattr(multiworld.worlds[player].options, "ending_required")
     #if(goal == 0):
@@ -67,7 +70,10 @@ def set_rules(multiworld: MultiWorld, player: int, extra_walls_table: Dict[str, 
     #if(getattr(multiworld.worlds[player].options, "cat_hunt_enabled")):
     #    multiworld.completion_condition[player] = lambda state: state.has("Cat", getattr(multiworld.worlds[player].options, "cat_hunt_target"))
 
-def costume_rules(multiworld: MultiWorld, player: int, extra_walls_table: Dict[str, str]):
+def costume_rules(world: World, extra_walls_table: Dict[str, str]):
+
+    player = world.player
+    multiworld = world.multiworld
 
     dye_locs = list(filter(lambda x: "Dye [" in x, location_table))
     drs_locs = list(filter(lambda x: "Dress [" in x, location_table))
@@ -89,31 +95,34 @@ def costume_rules(multiworld: MultiWorld, player: int, extra_walls_table: Dict[s
         cost = re.sub(r"\D", "", loc)
         try:
             costint = int(cost)
-            multiworld.get_location(loc, player).access_rule = lambda state, costint=costint: enough_cats(state, multiworld, player, extra_walls_table, costint)
+            multiworld.get_location(loc, player).access_rule = lambda state, costint=costint: enough_cats(state, world, extra_walls_table, costint)
         except ValueError:
             if(loc == "Dye [Black - ???]"):
-                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, multiworld, player, extra_walls_table, 1, strange=True)
+                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, world, extra_walls_table, 1, strange=True)
             elif(loc == "Dye [Brown - HAT]"):
                 multiworld.get_location(loc, player).access_rule = lambda state: state.can_reach("Flowers", 'Region', player)
             elif(loc == "Dye [Rainbow Flash - ALL]"):
-                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, multiworld, player, extra_walls_table, 168)
+                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, world, extra_walls_table, 168)
             elif(loc == "Dye [Rainbow Roll - ALL]"):
-                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, multiworld, player, extra_walls_table, 168)
+                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, world, extra_walls_table, 168)
             elif(loc == "Dye [Themed - ALL]"):
-                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, multiworld, player, extra_walls_table, 168)
+                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, world, extra_walls_table, 168)
             elif(loc == "Wings [Jet - BLU]"):
                 multiworld.get_location(loc, player).access_rule = lambda state: state.has("Blue Switch", player, 1)
             elif(loc == "Wings [Scarlet - ???]"):
-                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, multiworld, player, extra_walls_table, 150) and state.can_reach("Flowers", 'Region', player)
+                multiworld.get_location(loc, player).access_rule = lambda state: enough_cats(state, world, extra_walls_table, 150) and state.can_reach("Flowers", 'Region', player)
 
             
 
             
-def enough_cats(state: CollectionState, multiworld: MultiWorld, player: int, extra_walls_table: Dict[str, str], cost: int, strange = False) -> bool:
+def enough_cats(state: CollectionState, world: World, extra_walls_table: Dict[str, str], cost: int, strange = False) -> bool:
     
+    player = world.player
+    multiworld = world.multiworld
+
     catcount = 0
     if(not strange):
-        if getattr(multiworld.worlds[player].options, "cat_rando"):
+        if world.options.cat_rando:
             catcount = state.count("Cat", player)
         else:
             if state.can_reach("Village", "Region", player):
@@ -122,7 +131,7 @@ def enough_cats(state: CollectionState, multiworld: MultiWorld, player: int, ext
                 catcount += 29
             if state.can_reach("Jungle", "Region", player):
                 catcount += 22
-                if wall_rule(state, multiworld, player, extra_walls_table, "Jungle_Lava") or not getattr(multiworld.worlds[player].options, "extra_walls"):
+                if wall_rule(state, world, extra_walls_table, "Jungle_Lava") or not world.options.extra_walls:
                     catcount += 1
             if state.can_reach("Factory", "Region", player):
                 catcount += 25
@@ -141,7 +150,7 @@ def enough_cats(state: CollectionState, multiworld: MultiWorld, player: int, ext
             if state.can_reach("Final", "Region", player):
                 catcount += 1
     else:
-        if getattr(multiworld.worlds[player].options, "strange_cat_rando"):
+        if world.options.strange_cat_rando:
             catcount = state.count("Strange Cat", player)
         else:
             if state.can_reach("Village", "Region", player):
@@ -170,7 +179,10 @@ def enough_cats(state: CollectionState, multiworld: MultiWorld, player: int, ext
 
 
 
-def create_extra_walls(multiworld: MultiWorld, player: int) -> Dict[str, str]:
+def create_extra_walls(world: World) -> Dict[str, str]:
+
+    player = world.player
+    multiworld = world.multiworld
 
     reg_links = ["Village_Jungle", "Village_Canyon", "Jungle_Lava", "Jungle_Flowers", "Jungle_Factory", "Factory_Lava", "Lava_Mushrooms", "Lava_Ice", "Flowers_Ice"]
     switches = ["Red Switch", "Orange Switch", "Yellow Switch", "Blue Switch", "White Switch", "Purple Switch"]
@@ -182,8 +194,12 @@ def create_extra_walls(multiworld: MultiWorld, player: int) -> Dict[str, str]:
     #print(walls)
     return walls
 
-def wall_rule(state: CollectionState, multiworld: MultiWorld, player: int, walls: Dict[str, str], regs: str) -> bool:
-    if(not getattr(multiworld.worlds[player].options, "extra_walls")):
+def wall_rule(state: CollectionState, world: World, walls: Dict[str, str], regs: str) -> bool:
+
+    player = world.player
+    multiworld = world.multiworld
+
+    if(not world.options.extra_walls):
         return True
     
     switch = walls[regs]
@@ -196,10 +212,14 @@ def wall_rule(state: CollectionState, multiworld: MultiWorld, player: int, walls
     return can_pass
     
 
-def goal_rule(state: CollectionState, player: int, multiworld: MultiWorld) -> bool:
+def goal_rule(state: CollectionState, world: World) -> bool:
+
+    player = world.player
+    multiworld = world.multiworld
+
     can_goal = True
-    goal = getattr(multiworld.worlds[player].options, "ending_required")
-    cats = getattr(multiworld.worlds[player].options, "cat_hunt_target")
+    goal = world.options.ending_required
+    cats = world.options.cat_hunt_target
     
 
     if(goal == 0):
@@ -207,7 +227,7 @@ def goal_rule(state: CollectionState, player: int, multiworld: MultiWorld) -> bo
     else:
         can_goal = state.can_reach("Thing", 'Location', player)
     
-    if(not getattr(multiworld.worlds[player].options, "cat_hunt_enabled")):
+    if(not world.options.cat_hunt_enabled):
         cats = 0
     if(not state.has("Cat", player, cats)):
         can_goal = False

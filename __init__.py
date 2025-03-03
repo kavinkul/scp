@@ -5,7 +5,7 @@ from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
 from .Items import SCPItem, SCPItemData, get_items_by_category, item_table
 from .Locations import SCPLocation, location_table, full_location_table
-from .Options import scp_options, scp_option_groups, SuperCatPlanetOptions
+from .Options import scp_option_groups, SuperCatPlanetOptions
 from .Regions import create_regions
 from .Rules import set_rules, create_extra_walls, goal_rule, wall_rule
 import random
@@ -35,10 +35,10 @@ class SuperCatPlanetWorld(World):
     """
     game = "Super Cat Planet"
     web = SuperCatPlanetWebWorld()
-    option_definitions = scp_options
-    option_dataclass = SuperCatPlanetOptions
-    
+    #option_definitions = scp_options
+    options_dataclass = SuperCatPlanetOptions
     options: SuperCatPlanetOptions
+
     extra_walls_table: Dict[str, str]
     junk_pool: Dict[str, int]
     topology_present = True
@@ -56,16 +56,17 @@ class SuperCatPlanetWorld(World):
         if(self.options.include_final_stage.value == 1):
             self.options.strange_cat_rando.value = 1
         
-        self.extra_walls_table = create_extra_walls(self.multiworld, self.player)
+        self.extra_walls_table = create_extra_walls(self)
 
-    def make_walls(self):
-        return create_extra_walls(self.multiworld, self.player)
 
-    def get_setting(self, name: str):
-        return getattr(self.multiworld, name)[self.player]
+    #def get_setting(self, name: str):
+    #    return getattr(self.multiworld, name)[self.player]
 
     def fill_slot_data(self) -> dict:
-        slot_data_dict = {option_name: self.get_setting(option_name).value for option_name in scp_options}
+        #slot_data_dict = {option_name: self.get_setting(option_name).value for option_name in scp_options}
+        slot_data_dict = self.options.as_dict("cat_rando", "local_cats", "strange_cat_rando", "extra_walls", "hidden_costume_rando", "ending_required",
+                                               "include_final_stage", "cat_hunt_enabled", "cat_hunt_target", "easy_wind", "death_link", "death_link_amnesty",
+                                               "costume_weight", "ogmo_trap", "darkness_trap", "crow_trap", casing="snake")
         slot_data_dict["extra_walls_table"] = self.extra_walls_table
         return slot_data_dict
 
@@ -118,7 +119,7 @@ class SuperCatPlanetWorld(World):
         return SCPItem(name, data.classification, data.address, self.player)
 
     def create_extra_walls(self):
-        return create_extra_walls(self.multiworld, self.player)
+        return create_extra_walls(self)
 
     def create_junk_pool(self) -> Dict[str, int]:
         junk_pool: Dict[str, int] = {}
@@ -131,7 +132,7 @@ class SuperCatPlanetWorld(World):
         return junk_pool
 
     def set_rules(self):
-        set_rules(self.multiworld, self.player, self.extra_walls_table)
+        set_rules(self, self.extra_walls_table)
 
     def create_regions(self):
-        create_regions(self.multiworld, self.player)
+        create_regions(self)

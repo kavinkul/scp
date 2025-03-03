@@ -80,6 +80,17 @@ class CatHuntTarget(Range):
     range_end = 170
     default = 150
 
+class EasyWind(Toggle):
+    """Significantly reduces the strength of the wind for two cat locations in Ice Caves."""
+    display_name = "Weaker Wind"
+    default = False
+
+class DeathLinkAmnesty(Range):
+    """Number of deaths required per activation of death link."""
+    display_name = "Death Link Amnesty"
+    range_start = 1
+    range_end = 20
+    default = 1
 
 #item weights
 
@@ -111,7 +122,7 @@ class CrowTrap(Range):
     range_end = 100
     default = 1
 
-
+"""
 scp_options: Dict[str, type(Option)] = {
     # split jump move rando
     "cat_rando": CatsRandomized,
@@ -123,14 +134,16 @@ scp_options: Dict[str, type(Option)] = {
     "include_final_stage": FinalStage,
     "cat_hunt_enabled": CatHuntEnabled,
     "cat_hunt_target": CatHuntTarget,
+    "easy_wind": EasyWind,
     "death_link": DeathLink,
+    "death_link_amnesty": DeathLinkAmnesty,
     "costume_weight": CostumeWeight,
     "ogmo_trap": OgmoTrap,
     "darkness_trap": DarknessTrap,
     "crow_trap": CrowTrap,
     
 }
-
+"""
 scp_option_groups = [
     OptionGroup("Filler Weights", [
         CostumeWeight,
@@ -152,7 +165,9 @@ class SuperCatPlanetOptions(PerGameCommonOptions):
     include_final_stage: FinalStage
     cat_hunt_enabled: CatHuntEnabled
     cat_hunt_target: CatHuntTarget
+    easy_wind: EasyWind
     death_link: DeathLink
+    death_link_amnesty: DeathLinkAmnesty
     costume_weight: CostumeWeight
     ogmo_trap: OgmoTrap
     darkness_trap: DarknessTrap
