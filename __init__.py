@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from BaseClasses import Tutorial
 from worlds.AutoWorld import WebWorld, World
@@ -136,3 +136,7 @@ class SuperCatPlanetWorld(World):
 
     def create_regions(self):
         create_regions(self)
+
+    def interpret_slot_data(self, slot_data: Dict[str, Any]) -> None:
+        self.extra_walls_table = slot_data["extra_walls_table"]
+        set_rules(self, self.extra_walls_table, override = True)

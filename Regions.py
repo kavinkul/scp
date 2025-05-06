@@ -14,7 +14,6 @@ def create_regions(world: World):
 	player = world.player
 	multiworld = world.multiworld
 
-	
 
 	if(world.options.cat_rando):
 		location_table.update(cat_location_table)
@@ -31,7 +30,7 @@ def create_regions(world: World):
 	regVillage = Region("Village", player, multiworld)
 	villageLocNames = list(filter(lambda x: "Village - " in x, location_table))
 	villageLocNames.extend(list(filter(lambda x: "Dye [" in x, location_table)))
-	if(False):#world.options.cat_rando):
+	if(world.options.cat_rando):
 		villageLocNames.append('Cat [Dye Shop]')
 	regVillage.locations += [SCPLocation(player, loc_name, location_table[loc_name].address, regVillage) for loc_name in villageLocNames]
 	multiworld.regions.append(regVillage)
