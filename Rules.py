@@ -8,11 +8,8 @@ import re
 
 
 
-def set_rules(world: World, extra_walls_table: Dict[str, str], override = False):
+def set_rules(world: World, extra_walls_table: Dict[str, str]):
 
-    if(override == False and hasattr(world.multiworld, "generation_is_fake")):
-        return
-    
     player = world.player
     multiworld = world.multiworld
 
